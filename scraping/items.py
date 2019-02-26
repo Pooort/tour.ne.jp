@@ -11,8 +11,15 @@ import scrapy
 class HotelItem(scrapy.Item):
 
     name = scrapy.Field()
-    price_class = scrapy.Field()
+    type = scrapy.Field()
+    region = scrapy.Field()
     prefecture = scrapy.Field()
     city = scrapy.Field()
-    items_number = scrapy.Field()
+    hotel_address = scrapy.Field()
+    geocoordinates = scrapy.Field()
+    number_of_reviews = scrapy.Field()
     offer_sources = scrapy.Field()
+
+#Each
+#hotel should include: hotel name, hotel type, region, prefecture, city, hotel address, geocoordinates,
+#number of reviews, offers from what additional source are available.
