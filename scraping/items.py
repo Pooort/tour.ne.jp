@@ -17,7 +17,7 @@ class HotelItem(scrapy.Item):
     city = scrapy.Field()
     hotel_address = scrapy.Field()
     geocoordinates = scrapy.Field()
-    number_of_reviews = scrapy.Field()
+    rating = scrapy.Field()
     offer_sources = scrapy.Field()
 
 #Each
