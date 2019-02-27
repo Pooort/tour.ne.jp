@@ -8,6 +8,7 @@
 #     https://doc.scrapy.org/en/latest/topics/settings.html
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
+import requests
 
 BOT_NAME = 'scraping'
 
@@ -54,8 +55,8 @@ DOWNLOAD_DELAY = 0.5
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
    #'project.middlewares.ProjectDownloaderMiddleware': 543,
-   # 'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
-   # 'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
+   'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+   'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
 }
 
 
@@ -93,18 +94,23 @@ ITEM_PIPELINES = {
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 MONGO_DATABASE='test'
-
-ROTATING_PROXY_LIST = [
-   '103.203.133.250:8080',
-   '35.246.154.253:3128',
-   '128.65.186.174:8080',
-   '149.129.83.42:3128',
-   '222.165.234.147:31510',
-   '189.1.167.125:8080',
-   '146.196.108.202:80',
-   '200.35.85.147:48180',
-   '103.71.61.66:8080',
-   '109.75.40.137:46408',
-   '191.98.181.174:30035',
-   '176.109.10.101:41290'
-]
+params = {
+    'limit': 100,
+    'https': 'true'
+}
+response = requests.get('http://localhost:8899/api/v1/proxies', params=params)
+ROTATING_PROXY_LIST = ['{}:{}'.format(proxy['ip'], proxy['port']) for proxy in response.json()['proxies']]
+# ROTATING_PROXY_LIST = [
+#    '103.203.133.250:8080',
+#    '35.246.154.253:3128',
+#    '128.65.186.174:8080',
+#    '149.129.83.42:3128',
+#    '222.165.234.147:31510',
+#    '189.1.167.125:8080',
+#    '146.196.108.202:80',
+#    '200.35.85.147:48180',
+#    '103.71.61.66:8080',
+#    '109.75.40.137:46408',
+#    '191.98.181.174:30035',
+#    '176.109.10.101:41290'
+# ]

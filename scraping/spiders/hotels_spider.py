@@ -7,8 +7,8 @@ import re
 
 from pytz import timezone
 
-# client = pymongo.MongoClient()
-# db = client['test']
+client = pymongo.MongoClient()
+db = client['test']
 
 japan = timezone('Japan')
 japan_now = datetime.datetime.now(japan)
@@ -16,7 +16,8 @@ date_str = '{}{:02d}{}'.format(japan_now.year, japan_now.month, japan_now.day)
 
 class HotelsSpider(scrapy.Spider):
     name = "hotels"
-    url_template = 'https://www.tour.ne.jp/j_hotel/parts_hotel_list/?pg={page_num}&dp_ymd={date_str}'
+    #url_template = 'https://www.tour.ne.jp/j_hotel/parts_hotel_list/?pg={page_num}&dp_ymd={date_str}'
+    url_template = 'https://www.tour.ne.jp/j_hotel/parts_hotel_list/?pg={page_num}'
 
     def start_requests(self):
         page_num = 1
@@ -33,11 +34,11 @@ class HotelsSpider(scrapy.Spider):
             for hotel in hotels:
                 hotel_url = hotel.xpath('.//a[@class="viewSch Area_hotel_name"]')[0].attrib['href']
 
-                # if we need this functionality better to add middleware
-                #id = hotel_url.rsplit('/', 2)[1]
-                # existed_hotel = db.hotels.find_one({"id": id})
-                # if not existed_hotel:
-                yield response.follow(hotel_url, self.parse_hotel)
+                #if we need this functionality better to add middleware
+                id = hotel_url.rsplit('/', 2)[1]
+                existed_hotel = db.hotels.find_one({"id": id})
+                if not existed_hotel:
+                    yield response.follow(hotel_url, self.parse_hotel)
 
     def parse_hotel(self, response):
 
